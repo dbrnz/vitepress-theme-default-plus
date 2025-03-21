@@ -1,7 +1,8 @@
 <template>
   <article
     class="collection-article-card"
-    :class="`${page.type} ${size}`"
+    :class="classes"
+    :style="{ 'background-image': backgroundImage }"
   >
     <Icon
       v-if="icon !== false"
@@ -99,6 +100,24 @@ const hdate = computed(() => {
   });
 });
 
+const classes = computed(() => {
+  const classes = {
+    'background-image': page.image
+  }
+  classes[page.type] = true
+  classes[size] = true
+  return classes
+})
+
+const backgroundImage = computed(() => {
+  if (page.image) {
+    const path = page.relativePath.split('/').slice(0, -1)
+    path.push(page.image)
+    return `linear-gradient(to right, rgba(255,255,255, 0.7) 0 100%), url(${path.join('/')})`
+  }
+  return 'none'
+})
+
 const getSeparator = (index, end = 0) => {
   return index + 1 === end ? '' : ',';
 };
@@ -170,6 +189,10 @@ const getSeparator = (index, end = 0) => {
       color: var(--vp-c-brand-3);
     }
   }
+}
+
+.background-image {
+  background-size: cover;
 }
 
 @media (max-width: 767px) {
