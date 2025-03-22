@@ -57,6 +57,7 @@
     "js-yaml": "^4.1.0",
     "lodash-es": "^4.17.21",
     "markdown-it-container": "^4.0.0",
+    "minimatch": "^10.0.1",
     "nanoid": "^5.0.4",
     "node-html-parser": "^6.1.12",
     "sass": "^1.69.7",

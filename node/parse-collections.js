@@ -1,4 +1,5 @@
 import merge from 'lodash-es/merge.js';
+import {minimatch} from 'minimatch'
 
 import Debug from 'debug';
 
@@ -17,8 +18,20 @@ export default async function(pageData, {
   await Promise.all(Object.entries(themeConfig?.collections ?? {}).map(async ([collection, config]) => {
     // get collection pages so we can do the match
     const pages = siteConfig?.collections[collection] ?? [];
+
+    // check if the page's path matches one of the collection's patterns
+    let matched = (pages.includes(relativePath) || frontmatter.collection === collection)
+    if (!matched) {
+      for (const pattern of config.patterns) {
+        if (minimatch(relativePath, pattern)) {
+          matched = true
+          break
+        }
+      }
+    }
+
     // if this is a match then do the collection stuff we need to do
-    if (pages.includes(relativePath) || frontmatter.collection === collection) {
+    if (matched) {
       // if no author is set then we should be able to set it with contrib info
       if ((frontmatter.authors === undefined
          || (Array.isArray(frontmatter.authors) && frontmatter.authors.length === 0))
