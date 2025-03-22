@@ -25,6 +25,11 @@ export default async function(pageData, {
     frontmatter.date = await getTimestamp(resolve(siteConfig.srcDir, relativePath), {debug});
   }
 
+  // if we still dont have a date then get the file's modification time
+  if (!frontmatter.date) {
+    frontmatter.date = lstatSync(resolve(siteConfig.srcDir, relativePath)).mtime
+  }
+
   // standardize some date info
   const date = new Date(frontmatter.date);
   pageData.timestamp = date.getTime();
